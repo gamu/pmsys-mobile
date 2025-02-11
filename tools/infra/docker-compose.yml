@@ -1,0 +1,45 @@
+services:
+  opensearch:
+    image: opensearchproject/opensearch:latest
+    container_name: opensearch
+    environment:
+      - discovery.type=single-node
+      - OPENSEARCH_JAVA_OPTS=-Xms512m -Xmx512m
+    ports:
+      - '9200:9200'   # Порт OpenSearch (REST API)
+      - '9600:9600'   # Порт для мониторинга
+    volumes:
+      - opensearch-data:/usr/share/opensearch/data
+    networks:
+      - monorepo-network
+
+  opensearch-dashboards:
+    image: opensearchproject/opensearch-dashboards:latest
+    container_name: opensearch-dashboards
+    depends_on:
+      - opensearch
+    environment:
+      - OPENSEARCH_HOSTS=["http://opensearch:9200"]
+    ports:
+      - '5601:5601'  # Порт для OpenSearch Dashboards
+    networks:
+      - monorepo-network
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:latest
+    container_name: keycloak
+    environment:
+      - KEYCLOAK_ADMIN=admin
+      - KEYCLOAK_ADMIN_PASSWORD=admin
+    command: start-dev
+    ports:
+      - '8080:8080'  # Порт для Keycloak
+    networks:
+      - monorepo-network
+
+volumes:
+  opensearch-data:
+
+networks:
+  monorepo-network:
+    driver: bridge
