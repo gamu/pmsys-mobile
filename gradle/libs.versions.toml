@@ -1,0 +1,33 @@
+# gradle/libs.versions.toml
+
+######
+# Версии
+######
+
+[versions]
+kotlin = "1.8.21"
+androidGradlePlugin = "8.0.2"
+
+# Допустим, хотим зафиксировать версии Ktor:
+ktor = "2.3.1"
+
+######
+# Библиотеки
+######
+
+[libraries]
+# Библиотека Kotlin стандартная
+kotlin-stdlib = { group = "org.jetbrains.kotlin", name = "kotlin-stdlib", version.ref = "kotlin" }
+
+# Пример библиотеки Ktor (для backend)
+ktor-server-core = { group = "io.ktor", name = "ktor-server-core", version.ref = "ktor" }
+ktor-server-netty = { group = "io.ktor", name = "ktor-server-netty", version.ref = "ktor" }
+
+######
+# Плагины
+######
+[plugins]
+android-gradle = { id = "com.android.application", version.ref = "androidGradlePlugin" }
+kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
+kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
