@@ -1,0 +1,81 @@
+classDiagram
+    %% Сервис управления инцидентами
+    class IncidentService {
+        +getAllIncidents() // Получение всех инцидентов
+        +getIncidentDetails(incidentId) // Получение информации об инциденте
+        +updateIncidentStatus(incidentId, status) // Обновление статуса инцидента
+        +assignIncident(incidentId, userId) // Назначение ответственного за инцидент
+    }
+
+    %% Сервис управления планами работ
+    class WorkPlanService {
+        +getCurrentWorkPlan() // Получение текущего плана работ
+        +addTask(workPlanId, task) // Добавление задачи в план работ
+        +updateTask(taskId, updatedTask) // Обновление задачи
+        +logWork(taskId, hours) // Логирование трудозатрат
+    }
+
+    %% Сервис уведомлений
+    class NotificationService {
+        +sendNotification(userId, message) // Отправка уведомлений
+        +getNotifications(userId) // Получение списка уведомлений
+        +markNotificationAsRead(notificationId) // Пометка уведомления как прочитанного
+    }
+
+    %% Сервис аутентификации
+    class AuthService {
+        +registerUser(userDetails) // Регистрация пользователя
+        +login(credentials) // Авторизация пользователя
+        +validateToken(token) // Проверка токена пользователя
+    }
+
+    %% Связанные сущности
+    class User {
+        +id: UUID
+        +username: String
+        +password: String
+        +role: String
+    }
+
+    class Incident {
+        +id: UUID
+        +title: String
+        +description: String
+        +status: String
+        +priority: String
+        +assignedTo: UUID
+    }
+
+    class WorkPlan {
+        +id: UUID
+        +month: String
+        +createdBy: UUID
+    }
+
+    class Task {
+        +id: UUID
+        +workPlanId: UUID
+        +title: String
+        +description: String
+        +hoursLogged: Float
+    }
+
+    class Notification {
+        +id: UUID
+        +userId: UUID
+        +incidentId: UUID
+        +message: String
+        +isRead: Boolean
+    }
+
+    %% Связи между сущностями и сервисами
+    User "1" -- "*" IncidentService : "Управление инцидентами"
+    User "1" -- "*" WorkPlanService : "Работа с планами"
+    User "1" -- "*" NotificationService : "Получение уведомлений"
+    User "1" -- "*" AuthService : "Аутентификация"
+
+    IncidentService --|> Incident : "Оперирует"
+    WorkPlanService --|> WorkPlan : "Оперирует"
+    WorkPlanService --|> Task : "Взаимодействует"
+    NotificationService --|> Notification : "Оперирует"
+    AuthService --|> User : "Авторизует"
